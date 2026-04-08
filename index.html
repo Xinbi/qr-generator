@@ -82,18 +82,17 @@ const container = document.getElementById("qrcode");
 let qr;
 input.focus();
 function generateQR() {
-    const value = input.value.trim();
 
+    const value = input.value.trim();
     container.innerHTML = "";
 
     if (!value) return;
 
-    qr = new qrcode(container, {
-        text: value,
-        width: 256,
-        height: 256,
-        correctLevel: QRCode.CorrectLevel.H
-    });
+    const qr = qrcode(0, 'H');
+    qr.addData(value);
+    qr.make();
+
+    container.innerHTML = qr.createImgTag(6, 4);
 }
 
 input.addEventListener("input", generateQR);
