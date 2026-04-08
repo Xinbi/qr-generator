@@ -5,13 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QR Generator</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="qrcode.min.js"></script>
 
 <style>
 body {
     font-family: Arial, sans-serif;
     max-width: 600px;
     margin: 40px auto;
+    padding: 20px;
+    background: #121212;
+    color: #e0e0e0;
+}
+
+h2 {
+    margin-top: 0;
 }
 
 textarea, select, button {
@@ -19,6 +26,25 @@ textarea, select, button {
     font-size: 16px;
     padding: 10px;
     margin-top: 10px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    border: 1px solid #444;
+}
+
+textarea, select {
+    background: #1e1e1e;
+    color: #e0e0e0;
+}
+
+button {
+    background: #2d6cdf;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1f5cc4;
 }
 
 #qr-wrapper {
@@ -26,6 +52,12 @@ textarea, select, button {
     display: inline-block;
     background: white;
     padding: 24px; /* quiet zone */
+    border-radius: 8px;
+}
+
+#qrcode canvas,
+#qrcode img {
+    display: block;
 }
 </style>
 </head>
@@ -49,7 +81,6 @@ textarea, select, button {
 </div>
 
 <script>
-
 const input = document.getElementById("textInput");
 const container = document.getElementById("qrcode");
 const sizeSelect = document.getElementById("sizeSelect");
@@ -57,9 +88,8 @@ const sizeSelect = document.getElementById("sizeSelect");
 let qr;
 
 function generateQR() {
-
     const value = input.value.trim();
-    const size = parseInt(sizeSelect.value);
+    const size = parseInt(sizeSelect.value, 10);
 
     container.innerHTML = "";
 
@@ -77,7 +107,6 @@ input.addEventListener("input", generateQR);
 sizeSelect.addEventListener("change", generateQR);
 
 function downloadQR() {
-
     const canvas = container.querySelector("canvas");
 
     if (!canvas) {
@@ -90,7 +119,6 @@ function downloadQR() {
     link.download = "qrcode.png";
     link.click();
 }
-
 </script>
 
 </body>
