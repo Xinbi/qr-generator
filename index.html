@@ -1,65 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon.png">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#000000">
-<title>QR Code Generator</title>
+<title>QR Generator</title>
 
-<script src="qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
 body {
     font-family: Arial, sans-serif;
     max-width: 600px;
     margin: 40px auto;
-    padding: 20px;
-    background-color: #121212; /* Dark background */
-    color: #e0e0e0; /* Light text */
 }
 
-textarea {
+textarea, select, button {
     width: 100%;
-    height: 100px;
     font-size: 16px;
     padding: 10px;
-    box-sizing: border-box;
-    background-color: #1e1e1e;
-    color: #ffffff;
-    border: 1px solid #333;
-    border-radius: 4px;
-}
-
-button {
-    width: 100%;
-    padding: 12px;
     margin-top: 10px;
-    cursor: pointer;
-    background-color: #333;
-    color: white;
-    border: 1px solid #444;
-    border-radius: 4px;
-}
-
-button:active {
-    background-color: #444;
 }
 
 #qr-wrapper {
     margin-top: 20px;
     display: inline-block;
-    background: white; /* Keeps the QR code scannable */
-    padding: 24px; 
-    border-radius: 12px;
-}
-
-#qrcode canvas,
-#qrcode img {
-    display: block;
+    background: white;
+    padding: 24px; /* quiet zone */
 }
 </style>
 </head>
@@ -69,6 +35,13 @@ button:active {
 <h2>QR Generator</h2>
 
 <textarea id="textInput" placeholder="Paste text or URL"></textarea>
+
+<select id="sizeSelect">
+    <option value="256">256 px (screen)</option>
+    <option value="512">512 px (print)</option>
+    <option value="1024">1024 px (sticker / poster)</option>
+</select>
+
 <button onclick="downloadQR()">Download PNG</button>
 
 <div id="qr-wrapper">
@@ -79,25 +52,29 @@ button:active {
 
 const input = document.getElementById("textInput");
 const container = document.getElementById("qrcode");
+const sizeSelect = document.getElementById("sizeSelect");
 
 let qr;
-input.focus();
+
 function generateQR() {
+
     const value = input.value.trim();
+    const size = parseInt(sizeSelect.value);
 
     container.innerHTML = "";
 
     if (!value) return;
 
     qr = new QRCode(container, {
-        text: value,
-        width: 256,
-        height: 256,
+        text: unescape(encodeURIComponent(value)),
+        width: size,
+        height: size,
         correctLevel: QRCode.CorrectLevel.H
     });
 }
 
 input.addEventListener("input", generateQR);
+sizeSelect.addEventListener("change", generateQR);
 
 function downloadQR() {
 
@@ -113,8 +90,6 @@ function downloadQR() {
     link.download = "qrcode.png";
     link.click();
 }
-
-generateQR();
 
 </script>
 
